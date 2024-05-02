@@ -6,6 +6,7 @@ const abmjson = require('./abmjson.js');
 const fs = require('fs');
 const dns = require('dns');
 var bodyParser = require("body-parser");
+const { log } = require('console');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -21,24 +22,6 @@ app.use('/public', express.static(`${process.cwd()}/public`));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-function esValido(hostname){ 
-  var result;
-  dns.lookup(url, (err, addresses, family) => {
-    if (err) {
-        console.error('Error al buscar la dirección IP:', err);
-        result="";
-        return;
-    }else{
-    // Asignar la dirección IP a la variable
-    result = addresses;
-    
-    // Puedes usar la dirección IP aquí dentro de esta función de devolución de llamada
-    console.log('Dirección IP:', direccionIP);
-    } 
-  });
-
-  return result;
-}
 
 app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
@@ -52,11 +35,17 @@ app.get('/api/hello', function(req, res) {
 
 app.post('/api/shorturl', function(req, res) {
   const url = req.body.url_input;
-  console.log(url);
+    //console.log(url);
   if(abmjson.esURLValida(url)){
-  indice++;
-  abmjson.addShortUrl(rutaArchivo,url,indice);
-  res.json({'original_url': url, 'short_url': indice});
+      var find = abmjson.searchUrl(rutaArchivo,url);
+      console.log("el valor encontrado es "+find.toString());
+    if(find>0){
+      res.json({original_url: url, short_url: find});
+    }else{
+      indice++;
+      abmjson.addShortUrl(rutaArchivo,url,indice);
+      res.json({original_url: url, short_url: indice}); 
+    }
 
   }else{
     res.json({ error: 'invalid url' });
@@ -67,13 +56,22 @@ app.post('/api/shorturl', function(req, res) {
   
 
 app.get('/api/shorturl/:short', function(req,res){
-  const short_url = req.params.short;
+  var short_url = req.params.short;
+  if (!isNaN(short_url)) {
+  short_url = parseInt(short_url);  
   console.log(short_url);
   //busca por short
-  var url = abmjson.searchUrl(rutaArchivo, short_url);
-  //url=new URL();
-  res.redirect("https://google.com");
-  res.end();
+  var url = abmjson.searchShort(rutaArchivo, short_url);
+  if(url != ""){
+    res.redirect(301,url);
+  }else{
+    res.json({ error: 'invalid url' });
+  }
+  
+  res.end();}
+  else{
+    res.json({ error: 'invalid url' });
+  }
 
 });
 

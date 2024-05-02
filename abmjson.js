@@ -1,3 +1,4 @@
+const { log } = require('console');
 const fs = require('fs');
 
 
@@ -26,46 +27,52 @@ function addShortUrl(rutaArchivo, url,indice) {
 }
 
 
-function searchUrl(rutaArchivo, short_url) {
-    var result = "buscando";
+function searchUrl(rutaArchivo, url_buscada) {
+    var result = 0;
+    
     // Leer el archivo
-    fs.readFile(rutaArchivo, 'utf8', (error, data) => {
-        if (error) {
-            console.log(error);
-            return;
-        }
-        
-        try {
-            // Convertir el contenido del archivo en un array de objetos JSON
-            const urls = JSON.parse(data);
+    let rawdata = fs.readFileSync(rutaArchivo);
+    let datos = JSON.parse(rawdata);
 
-             // Iterar sobre cada objeto JSON
-             urls.forEach(function(url) {
-                // Llamar a la función de devolución de llamada con cada objeto JSON y su índice
-                if(url.short_url==short_url){
-                    result=url.original_url;
-                    console.log(result);
-                }                                   
-            });
-            return result;
-        } catch (parseError) {
-            console.log(parseError);
+    for (let i = 0; i < datos.length; i++) {
+        
+        if (datos[i].original_url === url_buscada) {
+            result = datos[i].short_url;
+            break; 
         }
-    });
+    }
+
+    return result;
+}
+
+function searchShort(rutaArchivo, short_url_buscada) {
+    var result = "";
+    
+    // Leer el archivo
+    let rawdata = fs.readFileSync(rutaArchivo);
+    let datos = JSON.parse(rawdata);
+
+    for (let i = 0; i < datos.length; i++) {
+        
+        if (datos[i].short_url === short_url_buscada) {
+            result = datos[i].original_url;
+            break; 
+        }
+    }
+    console.log("url encontrada: "+result);
+    return result;
 }
 
 function esURLValida(url) {
-    try {
-        // Intenta crear una nueva instancia de URL
-        new URL(url);
-        return true; // La URL es válida
-    } catch (error) {
-        return false; // La URL no es válida
-    }
+    const urlRegex = /^https?\:\/\/([a-zA-Z0-9]+\.)?[a-zA-Z0-9]+\.[a-zA-Z0-9]+\/?[\w\/\-\.\_\~\!\$\&\'\(\)\*\+\,\;\=\:\@\%]+?$/
+
+    const validation = urlRegex.test(url)
+    return validation
 }
 
 module.exports = { 
     esURLValida: esURLValida,
     searchUrl: searchUrl,
+    searchShort: searchShort,
     addShortUrl: addShortUrl
 }
