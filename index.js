@@ -42,11 +42,10 @@ app.post('/api/shorturl', function(req, res) {
     
     dns.lookup(urlNoProtocol, (err, address) => {
 
-       if (err) {
-        res.json({ error: 'invalid url' });
+       if (err) {       
         console.log("url no válida");
-        return;
-        }
+        return res.json({ error: "invalid hostname" });
+        }else{
 
     var find = abmjson.searchUrl(rutaArchivo,url);
     console.log("el valor encontrado es "+find.toString());
@@ -57,7 +56,7 @@ app.post('/api/shorturl', function(req, res) {
       abmjson.addShortUrl(rutaArchivo,url,indice);
       res.json({original_url: url, short_url: indice}); 
     }
-
+    }
   });
 
   }else{
