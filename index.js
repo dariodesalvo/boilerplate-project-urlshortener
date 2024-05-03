@@ -33,7 +33,7 @@ app.get('/api/hello', function(req, res) {
 
 
 app.post('/api/shorturl', function(req, res) {
-  const url = req.body.url_input;
+  const url = req.body.url;
   console.log(JSON.stringify(req.body, null, 2));
   console.log("test: "+url);
     //console.log(url);

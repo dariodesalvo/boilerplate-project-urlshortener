@@ -64,8 +64,8 @@ function searchShort(rutaArchivo, short_url_buscada) {
 }
 
 function esURLValida(url) {
-    const urlRegex = /^https?\:\/\/([a-zA-Z0-9]+\.)?[a-zA-Z0-9]+\.[a-zA-Z0-9]+\/?[\w\/\-\.\_\~\!\$\&\'\(\)\*\+\,\;\=\:\@\%]+?$/
-
+    //const urlRegex = /^https?\:\/\/([a-zA-Z0-9]+\.)?[a-zA-Z0-9]+\.[a-zA-Z0-9]+\/?[\w\/\-\.\_\~\!\$\&\'\(\)\*\+\,\;\=\:\@\%]+?$/
+    const urlRegex = const urlRegex = /^https?\:\/\/([a-zA-Z0-9]+\.)?[a-zA-Z0-9]+\.[a-zA-Z0-9]+(?:\/(?:(?:[\w\/\-\.\_\~\!\$\&\'\(\)\*\+\,\;\=\:\@\%]|(?:%[A-Fa-f0-9]{2})))+)?(?:\?(?:(?:[\w\/\-\.\_\~\!\$\&\'\(\)\*\+\,\;\=\:\@\%\?]|(?:%[A-Fa-f0-9]{2})))+)?$/;
     const validation = urlRegex.test(url)
     return validation
 }
