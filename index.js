@@ -6,7 +6,6 @@ const abmjson = require('./abmjson.js');
 const fs = require('fs');
 const dns = require('dns');
 var bodyParser = require("body-parser");
-const { log } = require('console');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -35,10 +34,22 @@ app.get('/api/hello', function(req, res) {
 
 app.post('/api/shorturl', function(req, res) {
   const url = req.body.url_input;
+
     //console.log(url);
   if(abmjson.esURLValida(url)){
-      var find = abmjson.searchUrl(rutaArchivo,url);
-      console.log("el valor encontrado es "+find.toString());
+
+    const urlNoProtocol = url.split('/')[2];
+    
+    dns.lookup(urlNoProtocol, (err, address) => {
+
+       if (err) {
+        res.json({ error: 'invalid url' });
+        console.log("url no válida");
+        return;
+        }
+
+    var find = abmjson.searchUrl(rutaArchivo,url);
+    console.log("el valor encontrado es "+find.toString());
     if(find>0){
       res.json({original_url: url, short_url: find});
     }else{
@@ -46,6 +57,8 @@ app.post('/api/shorturl', function(req, res) {
       abmjson.addShortUrl(rutaArchivo,url,indice);
       res.json({original_url: url, short_url: indice}); 
     }
+
+  });
 
   }else{
     res.json({ error: 'invalid url' });
