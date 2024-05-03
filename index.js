@@ -4,7 +4,7 @@ const cors = require('cors');
 const app = express();
 const abmjson = require('./abmjson.js');
 const fs = require('fs');
-const dns = require('dns');
+const dns = require('node:dns');
 var bodyParser = require("body-parser");
 
 // Basic Configuration
