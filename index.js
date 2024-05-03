@@ -44,7 +44,7 @@ app.post('/api/shorturl', function(req, res) {
 
        if (err) {       
         console.log("url no válida");
-        return res.json({ error: "invalid hostname" });
+        return res.json({ error: "Invalid Hostname" });
         }else{
 
     var find = abmjson.searchUrl(rutaArchivo,url);
@@ -60,7 +60,7 @@ app.post('/api/shorturl', function(req, res) {
   });
 
   }else{
-    res.json({ error: 'invalid url' });
+    res.json({ error: 'Invalid URL' });
   }
   
   });
@@ -77,12 +77,12 @@ app.get('/api/shorturl/:short', function(req,res){
   if(url != ""){
     res.redirect(301,url);
   }else{
-    res.json({ error: 'invalid url' });
+    res.json({ error: 'Invalid URL' });
   }
   
   res.end();}
   else{
-    res.json({ error: 'invalid url' });
+    res.json({ error: 'Invalid URL' });
   }
 
 });
