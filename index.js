@@ -34,6 +34,7 @@ app.get('/api/hello', function(req, res) {
 
 app.post('/api/shorturl', function(req, res) {
   const url = req.body.url_input;
+  console.log(JSON.stringify(req.body, null, 2));
   console.log("test: "+url);
     //console.log(url);
   if(abmjson.esURLValida(url)){
@@ -69,6 +70,7 @@ app.post('/api/shorturl', function(req, res) {
 
 app.get('/api/shorturl/:short', function(req,res){
   var short_url = req.params.short;
+   console.log(JSON.stringify(req.params, null, 2));
   console.log("test short: "+short_url);
   if (!isNaN(short_url)) {
   short_url = parseInt(short_url);  
